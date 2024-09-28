@@ -1,4 +1,4 @@
-Hi! Ask me a question about our company's profit and loss data : <b>How was our performance in May 2024?</b>
+Hi! Ask me a question about our company's profit and loss data : How was our performance in May 2024?
 
 LLM Response for vector store query decision: Yes
 
@@ -12,7 +12,7 @@ Relevance Score (0-100%): 100%
 
 Explanation: The answer provided a comprehensive analysis of the company's performance in May 2024, including details on revenue, costs, gross margin, overheads, net profit, and retained earnings. It also explained the reasons for the increase in revenue and the shortfall in net profit. Therefore, it fully addresses the question.
 
-Is there anything else I can answer for you? Or type QUIT to exit : <b>How did our revenue in May 2020 compare to the month before?</b>
+Is there anything else I can answer for you? Or type QUIT to exit : How did our revenue in May 2020 compare to the month before?
 
 LLM Response for vector store query decision: No
 
@@ -57,7 +57,7 @@ Relevance Score: 100%
 
 Explanation: The answer directly addresses the question by comparing the revenue of May 2020 to the previous month, which is exactly what the question asked for.
 
-Is there anything else I can answer for you? Or type QUIT to exit : <b>What was the actual revenue in May 2020?</b>
+Is there anything else I can answer for you? Or type QUIT to exit : What was the actual revenue in May 2020?
 
 LLM Response for vector store query decision: No
 
