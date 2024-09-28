@@ -40,6 +40,10 @@ This Jupyter notebook implements a question-answering system for Profit and Loss
 - Combines information from vector store and SQL queries to generate comprehensive answers.
 - `evaluate_answer_relevance()` uses an LLM to assess the relevance and quality of the generated answer.
 
+## Dataflow and Logic Diagram
+
+<img src="dataflow_diagram.png">
+
 ## LangChain Components Used
 
 - `ChatOpenAI`: Interface for the LLM (e.g., GPT-4).
