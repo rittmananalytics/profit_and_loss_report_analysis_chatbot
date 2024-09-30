@@ -24,6 +24,8 @@ The system consists of several key components:
 
 The process of answering a question follows these steps:
 
+<img src="data_flow_and_logic.png" width=75%>
+
 1. **Question Analysis:** The user enters a natural language question.
 
 2. **Vector Store Query (First Attempt):** The system determines whether the question can be answered using the pre-created analysis stored in the `pl_reports_vector_storage` vector store. This is determined by a prompt sent to the LLM, evaluating if the question aligns with the types of analyses performed and the available time range. If deemed suitable, a similarity search is performed to retrieve the most relevant document(s).
