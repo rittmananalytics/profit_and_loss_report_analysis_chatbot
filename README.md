@@ -6,7 +6,7 @@ This notebook implements a question-answering system leveraging Large Language M
 
 The system consists of several key components:
 
-<img src="components.png" width=50%>
+<img src="components.png" width=75%%>
 
 1. **Data Source (BigQuery):** The P&L data resides in BigQuery, organized into tables like `pl_reports`, `profit_and_loss_report_account_group`, etc. Pre-computed analysis is stored in `pl_reports_vector_storage`.
 
