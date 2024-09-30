@@ -36,6 +36,8 @@ The P&L data is stored in BigQuery tables, accessed through SQLAlchemy.
 
 ## Workflow
 
+<img src="dataflow_diagram.png">
+
 1. **Question Input**: The user inputs a question about P&L data.
 
 2. **RAG vs SQL Decision**:
