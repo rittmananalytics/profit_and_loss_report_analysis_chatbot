@@ -1,106 +1,63 @@
-# Profit & Loss Report Self-Learning Chatbot (RAG + SQL Agent)
+## Technical Guide: Profit & Loss Data Q&A System
 
-## Overview
+This notebook implements a question-answering system leveraging Large Language Models (LLMs), Langchain, and a vector store in BigQuery to analyze profit and loss (P&L) data. The system allows users to ask natural language questions about the P&L data and receive relevant answers.
 
-This Jupyter notebook implements an advanced question-answering system for Profit and Loss (P&L) data analysis. It combines Retrieval-Augmented Generation (RAG), vector store queries, and SQL-based data retrieval to provide comprehensive and accurate answers to financial questions.
+### System Architecture
 
-## Key Features
+The system consists of several key components:
 
-1. Hybrid RAG and SQL-based querying
-2. Dynamic decision-making between RAG and SQL approaches
-3. Feedback loop for continuous improvement
-4. Vector store for storing and retrieving successful Q&A pairs
-5. Flexible time period handling for financial queries
+1. **Data Source (BigQuery):** The P&L data resides in BigQuery, organized into tables like `pl_reports`, `profit_and_loss_report_account_group`, etc. Pre-computed analysis is stored in `pl_reports_vector_storage`.
 
-## System Architecture
+2. **Vector Store (BigQuery):** A BigQueryVectorStore is used to store embeddings of pre-created P&L analysis texts. This allows for efficient similarity search to quickly find relevant context for user questions. The table `pl_reports_vector_storage` holds these embeddings. A separate vector store, `successful_qa_pairs`, is used to store successful question-answer pairs for learning and improving the system's performance.
 
-### 1. Vector Stores
+3. **LLM (OpenAI's GPT-4):** The core intelligence is provided by OpenAI's GPT-4, acting as the question answering engine and providing natural language processing capabilities.
 
-The system uses two vector stores:
-- `vector_store`: Stores pre-created P&L report analyses
-- `qa_vector_store`: Stores successful question-answer pairs
+4. **Langchain:** Langchain orchestrates the interaction between the different components. It manages the agent, memory, chains, and toolkits to provide a cohesive and efficient workflow.
 
-Both vector stores are implemented using BigQuery and the `BigQueryVectorStore` class from LangChain.
+5. **SQL Agent (Langchain):** An SQL agent is used to directly query BigQuery when the vector store does not contain sufficient information to answer a question.
 
-### 2. Embedding Model
+6. **Embedding Model (Vertex AI):** `textembedding-gecko@latest` from Google Vertex AI creates vector embeddings of text data, enabling semantic search within the vector store.
 
-We use the `VertexAIEmbeddings` model to generate embeddings for both the pre-created analyses and the Q&A pairs.
+### Question Answering Workflow
 
-### 3. Language Model
+The process of answering a question follows these steps:
 
-The system uses OpenAI's GPT-4 model (via `ChatOpenAI`) for natural language understanding and generation.
+1. **Question Analysis:** The user enters a natural language question.
 
-### 4. SQL Database
+2. **Vector Store Query (First Attempt):** The system determines whether the question can be answered using the pre-created analysis stored in the `pl_reports_vector_storage` vector store. This is determined by a prompt sent to the LLM, evaluating if the question aligns with the types of analyses performed and the available time range. If deemed suitable, a similarity search is performed to retrieve the most relevant document(s).
 
-The P&L data is stored in BigQuery tables, accessed through SQLAlchemy.
+3. **Pre-created Answer Summarization:** If relevant documents are found, their content is extracted, stripped of HTML tags, and summarized using the LLM to focus only on information relevant to the question. This avoids providing irrelevant information from the original analysis.
 
-## Workflow
+4. **SQL Query (Fallback):** If the vector store query does not yield satisfactory results or is deemed unsuitable, the system uses the Langchain SQL agent. This component uses the LLM to:
+- Analyze the question to identify relevant financial terms and entities.
+- Translate these terms into a suitable SQL `WHERE` clause to filter the data.
+- Construct a SQL query to the appropriate BigQuery view (`profit_and_loss_report_account_group_xa`, `profit_and_loss_report_sub_categories_xa`, or `profit_and_loss_report_categories_xa` depending on the question context). The view selection is determined by analysis of the question.
+- Execute the query in BigQuery and format the results into a readable answer.
 
-<img src="dataflow_diagram.png">
+5. **Answer Relevance Evaluation:** The generated answer (whether from the vector store or SQL query) is evaluated by the LLM to assess its relevance to the original question and provides a relevance score and explanation.
 
-1. **Question Input**: The user inputs a question about P&L data.
+6. **Feedback and Learning:** The user provides feedback on the answer. This feedback is used to improve the question for subsequent iterations, aiming to refine the answer. Successful question-answer pairs are stored in the `successful_qa_pairs` vector store, improving future responses.
 
-2. **RAG vs SQL Decision**:
-   - The `should_query_vector_store` function determines whether to use RAG or SQL-based querying.
-   - It considers the question content, time frame, and available data in the vector store.
+7. **Iterative Refinement (Optional):** The system allows for iterative refinement based on user feedback. The LLM is used to reformulate the question in response to feedback, repeating the process for `max_iterations` (default 3).
 
-3. **RAG Approach** (if chosen):
-   - The system queries the `vector_store` for relevant pre-created analyses.
-   - It uses the `similarity_search` method to find the most relevant document.
-   - The retrieved content is summarized and presented as the answer.
+### Key Functions
 
-4. **SQL Approach** (if chosen or if RAG fails):
-   - The system extracts relevant time periods and financial categories from the question.
-   - It constructs a SQL query using the `SQLDatabaseToolkit` and `create_sql_agent` from LangChain.
-   - The query is executed against the BigQuery database, and the results are processed to form an answer.
+* **`ask_question(question, context="")`:** The main function for answering questions. It orchestrates the vector store search and SQL query processes.
+* **`should_query_vector_store(question)`:** Determines if a vector store search is likely to provide a relevant answer.
+* **`summarize_content(question, content)`:** Summarizes the retrieved vector store content to focus only on relevant information.
+* **`find_matching_values(question, lookups)`:** Extracts relevant financial entities from the question to construct the SQL `WHERE` clause.
+* **`construct_filter_clause(matches)`:** Creates the SQL `WHERE` clause using extracted entities and time periods.
+* **`determine_view(matches)`:** Selects the appropriate BigQuery view based on the question's context.
+* **`extract_time_periods(question)`:** Extracts time periods from the question for filtering.
+* **`get_similar_qa(question)`:** Retrieves similar Q&A pairs from the `successful_qa_pairs` vector store for context.
+* **`ask_question_with_feedback_and_learning(question)`:** Handles user feedback and iterative refinement.
+* **`store_successful_qa(question, answer)`:** Stores successful Q&A pairs in the `successful_qa_pairs` vector store.
 
-5. **Answer Evaluation**:
-   - The `evaluate_answer_relevance` function uses the language model to assess the relevance and quality of the generated answer.
 
-6. **User Feedback**:
-   - The system asks the user if the answer is sufficient.
-   - If not, it requests feedback on how to improve the answer.
+### Setup and Dependencies
 
-7. **Question Refinement**:
-   - If the user is not satisfied, the system uses the language model to generate an improved question based on the feedback.
-   - The process repeats with the refined question (up to a maximum of 3 iterations).
+The notebook requires several Python packages, listed at the beginning of the file. Ensure you have installed them before running the code. You will also need to configure:
 
-8. **Storing Successful Q&A Pairs**:
-   - When a user is satisfied with an answer, the Q&A pair is stored in the `qa_vector_store`.
-   - This stored pair can be used to inform future similar questions.
-
-## Key Components
-
-### 1. `extract_time_periods` Function
-Identifies and extracts various time periods (years, months, quarters) mentioned in the question.
-
-### 2. `construct_date_filter` Function
-Constructs SQL date filters based on the extracted time periods.
-
-### 3. `ask_question` Function
-The core function that orchestrates the question-answering process, including the decision between RAG and SQL approaches.
-
-### 4. `ask_question_with_feedback_and_learning` Function
-Implements the feedback loop and question refinement process.
-
-### 5. `store_successful_qa` Function
-Stores successful Q&A pairs in the vector store for future reference.
-
-## Continuous Learning
-
-The system improves over time through two mechanisms:
-1. Storing successful Q&A pairs in the vector store, which can be retrieved for similar future questions.
-2. The feedback loop, which allows for question refinement based on user input.
-
-## Usage
-
-1. Set up the required Google Cloud and OpenAI credentials.
-2. Run the notebook cells in order to initialize all components.
-3. Use the `main` function to start an interactive Q&A session about P&L data.
-
-## Customization
-
-The system can be customized by:
-- Modifying the `vector_store_content_description` to match specific P&L data structures.
-- Adjusting the SQL views and table names in the `determine_view` function.
-- Expanding the `extract_time_periods` function to handle more complex date formats.
+* A service account key file (`service_account_file`) with access to your BigQuery project.
+* An OpenAI API key (`OPENAI_API_KEY`).
+* The correct BigQuery project ID, dataset name, and table names.
