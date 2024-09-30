@@ -65,3 +65,50 @@ The notebook requires several Python packages, listed at the beginning of the fi
 * A service account key file (`service_account_file`) with access to your BigQuery project.
 * An OpenAI API key (`OPENAI_API_KEY`).
 * The correct BigQuery project ID, dataset name, and table names.
+
+## Example Output
+
+Example output, with the debugging output removed for clarity, is shown below. The full output including debugging code is <a href="example_output.txt">here</a>.
+
+```
+Hi! Ask me a question about our company's profit and loss data
+
+Your question (or type 'QUIT' to exit): What was our revenue in May 2024?
+
+Answer:
+Based on the pre-created analysis: The revenue for May 2024 was £137,236.70. This was a significant increase of 101.79% compared to the previous month and was primarily attributed to a new consulting contract with FinCorp Group.
+
+Relevance Evaluation:
+Relevance Score: 100%
+
+Explanation: The answer directly addresses the question by providing the exact revenue for May 2024. It also provides additional context about the increase in revenue and the reason for it, which, while not directly asked for, enhances the completeness of the response.
+
+Did this answer your question sufficiently? (yes/no): yes
+
+Final Answer: Based on the pre-created analysis: The revenue for May 2024 was £137,236.70. This was a significant increase of 101.79% compared to the previous month and was primarily attributed to a new consulting contract with FinCorp Group.
+
+Relevance Evaluation:
+Relevance Score: 100%
+
+Explanation: The answer directly addresses the question by providing the exact revenue for May 2024. It also provides additional context about the increase in revenue and the reason for it, which, while not directly asked for, enhances the completeness of the response.
+
+---
+
+Your question (or type 'QUIT' to exit): What was our revenue in May 2020?
+
+Answer:
+The revenue for May 2020 was £35,030.78.
+
+Did this answer your question sufficiently? (yes/no): no
+
+Please provide feedback on how the answer could be improved: The revenue number needs to be compared to the same month in the previous year, with a percentage change between the month in-question and month a year ago
+
+Answer:
+The revenue in May 2020 was £35030.78 and in May 2019 it was £19777.34. The percentage change in revenue from May 2019 to May 2020 is approximately 77.2%.
+
+Did this answer your question sufficiently? (yes/no): yes
+
+---
+
+Your question (or type 'QUIT' to exit): QUIT
+```
