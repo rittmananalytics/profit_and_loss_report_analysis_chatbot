@@ -78,19 +78,7 @@ Your question (or type 'QUIT' to exit): What was our revenue in May 2024?
 Answer:
 Based on the pre-created analysis: The revenue for May 2024 was £137,236.70. This was a significant increase of 101.79% compared to the previous month and was primarily attributed to a new consulting contract with FinCorp Group.
 
-Relevance Evaluation:
-Relevance Score: 100%
-
-Explanation: The answer directly addresses the question by providing the exact revenue for May 2024. It also provides additional context about the increase in revenue and the reason for it, which, while not directly asked for, enhances the completeness of the response.
-
 Did this answer your question sufficiently? (yes/no): yes
-
-Final Answer: Based on the pre-created analysis: The revenue for May 2024 was £137,236.70. This was a significant increase of 101.79% compared to the previous month and was primarily attributed to a new consulting contract with FinCorp Group.
-
-Relevance Evaluation:
-Relevance Score: 100%
-
-Explanation: The answer directly addresses the question by providing the exact revenue for May 2024. It also provides additional context about the increase in revenue and the reason for it, which, while not directly asked for, enhances the completeness of the response.
 
 ---
 
