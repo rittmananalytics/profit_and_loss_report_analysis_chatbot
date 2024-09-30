@@ -1,6 +1,6 @@
-## Technical Guide: Profit & Loss Data Q&A System
+## Readme: Profit & Loss Report Q&A Chatbot using LangChain, LLMs and BigQuery Vector Store
 
-This notebook implements a question-answering system leveraging Large Language Models (LLMs), Langchain, and a vector store in BigQuery to analyze profit and loss (P&L) data. The system allows users to ask natural language questions about the P&L data and receive relevant answers.
+This notebook implements a question-answering system leveraging Large Language Models (LLMs), Langchain, and a vector store in BigQuery to analyze profit and loss (P&L) data. The system allows users to ask natural language questions about the P&L data and receive relevant answers. Note that the P&L analysis referenced in the `pl_reports` table was created using another BigQuery notebook also using LLMs and Langchain, <a href="https://github.com/rittmananalytics/Automated_Profit-Loss_Report_Analyzer_VertexAI">a version of which can be found here</a>.
 
 ### System Architecture
 
