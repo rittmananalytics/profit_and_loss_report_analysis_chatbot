@@ -6,6 +6,8 @@ This notebook implements a question-answering system leveraging Large Language M
 
 The system consists of several key components:
 
+<img src="components.png" width=50%>
+
 1. **Data Source (BigQuery):** The P&L data resides in BigQuery, organized into tables like `pl_reports`, `profit_and_loss_report_account_group`, etc. Pre-computed analysis is stored in `pl_reports_vector_storage`.
 
 2. **Vector Store (BigQuery):** A BigQueryVectorStore is used to store embeddings of pre-created P&L analysis texts. This allows for efficient similarity search to quickly find relevant context for user questions. The table `pl_reports_vector_storage` holds these embeddings. A separate vector store, `successful_qa_pairs`, is used to store successful question-answer pairs for learning and improving the system's performance.
