@@ -1,7 +1,5 @@
 # Profit & Loss Report Self-Learning Chatbot (RAG + SQL Agent)
 
-# P&L Query Notebook with RAG and SQL Agent
-
 ## Overview
 
 This Jupyter notebook implements an advanced question-answering system for Profit and Loss (P&L) data analysis. It combines Retrieval-Augmented Generation (RAG), vector store queries, and SQL-based data retrieval to provide comprehensive and accurate answers to financial questions.
